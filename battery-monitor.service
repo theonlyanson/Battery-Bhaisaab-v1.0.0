@@ -1,6 +1,6 @@
 [Unit]
-Description=Battery Bhaisaab Battery Monitor
-#Documentation=https://github.com/theonlyanson/battery-bhaisaab
+Description=Battery Bhaisaab V1.0.0
+Documentation=https://github.com/theonlyanson/Battery-Bhaisaab-v1.0.0/blob/main/README.md
 After=graphical-session.target
 Wants=graphical-session.target
 
