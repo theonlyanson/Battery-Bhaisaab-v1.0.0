@@ -1,0 +1,23 @@
+[Unit]
+Description=Battery Bhaisaab Battery Monitor
+#Documentation=https://github.com/theonlyanson/battery-bhaisaab
+After=graphical-session.target
+Wants=graphical-session.target
+
+[Service]
+Type=simple
+
+WorkingDirectory=%h/.local/share/battery-bhaisaab
+
+ExecStart=/usr/bin/env python3 %h/.local/share/battery-bhaisaab/src/monitor.py
+
+Restart=on-failure
+RestartSec=5
+
+Environment=PYTHONUNBUFFERED=1
+
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=default.target

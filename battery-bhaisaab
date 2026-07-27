@@ -1,0 +1,171 @@
+#!/usr/bin/env python3
+
+"""
+Battery Bhaisaab CLI
+
+Main command line interface.
+"""
+
+import argparse
+import subprocess
+import sys
+from pathlib import Path
+
+# ---------------------------------------------------------
+# Locate installed source directory
+# ---------------------------------------------------------
+
+INSTALL_DIR = Path.home() / ".local/share" / "battery-bhaisaab"
+
+SRC = INSTALL_DIR / "src"
+
+if not SRC.exists():
+    print("❌ Battery Bhaisaab is not installed correctly.")
+    print("Run ./install.sh first.")
+    sys.exit(1)
+
+sys.path.insert(0, str(SRC))
+
+# ---------------------------------------------------------
+# Imports
+# ---------------------------------------------------------
+
+from battery import Battery
+from doctor import Doctor
+from logger import Logger
+from monitor import BatteryMonitor
+
+
+VERSION = "1.0.0-alpha"
+
+
+# ---------------------------------------------------------
+# Commands
+# ---------------------------------------------------------
+
+def status():
+
+    battery = Battery()
+
+    info = battery.info()
+
+    print()
+
+    print("🐧 Battery Bhaisaab")
+
+    print("--------------------------------")
+
+    print(f"Battery       : {info.name}")
+    print(f"Percentage    : {info.capacity}%")
+    print(f"Status        : {info.status}")
+    print(f"Technology    : {info.technology}")
+    print(f"Manufacturer  : {info.manufacturer}")
+
+    remaining = battery.remaining_minutes()
+
+    if remaining is not None:
+        print(f"Remaining     : {remaining} min")
+
+    print()
+
+
+def doctor():
+
+    Doctor().run()
+
+
+def logs():
+
+    subprocess.run([
+        "journalctl",
+        "--user",
+        "-u",
+        "battery-monitor.service",
+        "-f"
+    ])
+
+
+def service(action):
+
+    subprocess.run([
+        "systemctl",
+        "--user",
+        action,
+        "battery-monitor.service"
+    ])
+
+
+def version():
+
+    print()
+
+    print("Battery Bhaisaab")
+
+    print(VERSION)
+
+    print()
+
+
+# ---------------------------------------------------------
+# Main
+# ---------------------------------------------------------
+
+def main():
+
+    parser = argparse.ArgumentParser(
+        prog="battery-bhaisaab",
+        description="Battery Bhaisaab CLI"
+    )
+
+    sub = parser.add_subparsers(dest="command")
+
+    sub.add_parser("status")
+    sub.add_parser("doctor")
+    sub.add_parser("logs")
+    sub.add_parser("version")
+    sub.add_parser("run")
+    sub.add_parser("start")
+    sub.add_parser("stop")
+    sub.add_parser("restart")
+
+    args = parser.parse_args()
+
+    if args.command == "status":
+
+        status()
+
+    elif args.command == "doctor":
+
+        doctor()
+
+    elif args.command == "logs":
+
+        logs()
+
+    elif args.command == "version":
+
+        version()
+
+    elif args.command == "run":
+
+        BatteryMonitor().run()
+
+    elif args.command == "start":
+
+        service("start")
+
+    elif args.command == "stop":
+
+        service("stop")
+
+    elif args.command == "restart":
+
+        service("restart")
+
+    else:
+
+        parser.print_help()
+
+
+if __name__ == "__main__":
+    main()
