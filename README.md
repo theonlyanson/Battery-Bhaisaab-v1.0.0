@@ -6,6 +6,7 @@ Battery Bhaisaab is a lightweight battery monitoring daemon for Linux that notif
 
 Designed for simplicity, reliability, and minimal resource usage.
 
+CHECK "RELEASES" FOR THE LATEST UPDATED CODE. 
 ---
 
 ## ✨ Features
@@ -61,7 +62,7 @@ battery-bhaisaab/
 Clone the repository
 
 ```bash
-git clone https://github.com/theonlyanson/Battery-Bhaisaab-v1.0.0.git
+git clone https://github.com/theonlyanson/Battery-Bhaisaab.git
 
 cd battery-bhaisaab
 ```
